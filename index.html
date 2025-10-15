@@ -210,15 +210,7 @@
         gsap.set(`#frame-${i}`, { autoAlpha: 0, x: 0 });
       }
       
-      // Test: Make sure first frame is actually visible
-      console.log('First frame opacity:', firstFrame.style.opacity);
-      console.log('First frame display:', firstFrame.style.display);
-      console.log('First frame visibility:', firstFrame.style.visibility);
-      
-      // Debug: log to console
-      console.log('Frame container:', frameContainer);
-      console.log('First frame:', firstFrame);
-      console.log('First frame src:', firstFrame.src);
+      // First frame is set up and ready
       
       // Calculate scroll distance for smooth video-like playback
       const endPercent = totalFrames * 5; // 20% per frame for more scroll distance
@@ -233,9 +225,9 @@
         end: "+=" + endPercent + "%",
         scrub: true,
         pin: true,
-        markers: true, // Enable markers to see scroll trigger area
+        markers: false, // Disable markers for production
         onUpdate: (self) => {
-          console.log('ScrollTrigger progress:', self.progress);
+          // Calculate frame based on scroll progress
           
           // Calculate which frame should be shown based on progress
           const targetFrameIndex = Math.floor(self.progress * (totalFrames - 1));
@@ -283,16 +275,16 @@
               }
             );
             
-            console.log(`Showing frame ${targetFrameIndex + 1}: ${newFrameSel}`);
+            // Frame updated successfully
             
             currentFrameIndex = targetFrameIndex;
           }
         },
         onStart: () => {
-          console.log('ScrollTrigger started');
+          // Animation started
         },
         onComplete: () => {
-          console.log('ScrollTrigger completed');
+          // Animation completed
         }
       });
       

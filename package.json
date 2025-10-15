@@ -1,0 +1,29 @@
+{
+  "name": "gsap-scroll-animation",
+  "version": "1.0.0",
+  "description": "A GSAP ScrollTrigger-based frame animation system",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3000 -o",
+    "build": "echo 'No build step required for static site'",
+    "deploy": "gh-pages -d .",
+    "predeploy": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YOUR_USERNAME/gsap-scroll-test.git"
+  },
+  "keywords": [
+    "gsap",
+    "scrolltrigger",
+    "animation",
+    "frames",
+    "scroll"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "homepage": "https://YOUR_USERNAME.github.io/gsap-scroll-test",
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
+  }
+}
