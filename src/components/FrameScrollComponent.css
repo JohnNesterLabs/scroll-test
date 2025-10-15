@@ -15,6 +15,9 @@
     color: var(--text);
     margin: 0;
     padding: 0;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
 }
 
 .wrap {
@@ -94,14 +97,12 @@ header p {
 .frame-container {
     position: absolute;
     left: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
     width: 100%;
-    /* max-width: 520px; */
-    height: 100vh;
-    border-radius: 12px;
+    height: 100%;
+    border-radius: 0;
     overflow: hidden;
-    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+    box-shadow: none;
     background: #111;
     display: flex;
     align-items: center;

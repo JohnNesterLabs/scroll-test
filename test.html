@@ -3,22 +3,105 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Multi-section scroll model — left paragraphs, right pinned image</title>
+  <title>Multi-section scroll — centered text, fade transitions</title>
   <style>
     :root{
-      --bg: #000;           /* solid black background */
+      --bg: #000;
       --text: #EEF2FF;
       --muted: #98A0B3;
+      --accent-a: #7C5CFF;
+      --accent-b: #FF6CA3;
       --maxw: 1200px;
     }
+
+    /* Page basics */
     html,body{ height:100%; margin:0; background:var(--bg); color:var(--text); font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 36px 20px; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 36px 20px; box-sizing: border-box; }
     header { text-align:center; margin-bottom:18px; }
     header h1 { margin:0 0 4px; font-size:1.25rem; }
     header p { margin:0; color:var(--muted); font-size:0.95rem; }
-    /* spacer before pinned area */
-    .spacer { height: 60vh; }
-    /* The pinned hero that contains left text and right image */
+
+    /* Fixed section counter in top-right */
+    .section-counter {
+      position: fixed;
+      right: 18px;
+      top: 18px;
+      background: rgba(255,255,255,0.03);
+      padding: 8px 12px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-weight: 700;
+      z-index: 9999;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      font-size: 0.95rem;
+    }
+
+    /********************************
+      SECTION SNAP AREA (text-only)
+    *********************************/
+    /* Using body scroll but a wrapper to apply snap behavior */
+    .sections {
+      scroll-snap-type: y mandatory;
+      -webkit-scroll-snap-type: y mandatory;
+    }
+    .section {
+      height: 100vh;
+      min-height: 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      padding: 28px;
+      position: relative;
+    }
+
+    /* Content centered exactly center of viewport */
+    .center-box {
+      width: 100%;
+      max-width: 960px;
+      text-align: center;
+      padding: 28px 22px;
+      box-sizing: border-box;
+    }
+    .center-box h2 {
+      margin: 0 0 12px;
+      font-size: 1.3rem;
+      line-height: 1.1;
+    }
+    .center-box p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.0rem;
+      line-height: 1.5;
+    }
+
+    /* Paragraph pieces that will animate */
+    .anim-para {
+      opacity: 0;
+      transform: translateY(6px);
+      will-change: opacity, transform;
+    }
+
+    /* Vibrant divider at bottom edge to indicate section end */
+    .divider {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      height: 4px;
+      margin: 0 6%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
+      opacity: 0.95;
+      box-shadow: 0 6px 22px rgba(124,92,255,0.12);
+    }
+
+    /* spacer before pinned area (keeps original spacing) */
+    .spacer { height: 8vh; }
+
+    /* ==== Pinned story area (your existing frame block) ==== */
     .story-pin {
       height: 100vh;
       position: relative;
@@ -38,25 +121,17 @@
       padding: 24px;
       box-sizing: border-box;
     }
-    /* Left column (text) */
     .left {
-        width: 100%;
-        height: 100%;
-      /* width: 50%; */
-      /* min-width: 260px; */
+      width: 100%;
       height: 70vh;
       position: relative;
       display: block;
     }
-    /* Frame container for animated frames */
     .frame-container {
       position: absolute;
       left: 0;
       top: 50%;
       transform: translateY(-50%);
-      /* width: 95%; */
-      /* max-width: 520px; */
-      /* height: 70vh; */
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 8px 30px rgba(2,6,23,0.6);
@@ -64,57 +139,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      width: 100%;
+      max-width: 520px;
+      height: 70vh;
     }
     .frame {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
-      opacity: 0;    /* all start hidden; GSAP will animate */
-      will-change: transform, opacity;
-    }
-    /* small section label that appears briefly between sections */
-    .section-label {
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      font-weight: 600;
-      background: rgba(255,255,255,0.02);
-      padding: 18px 22px;
-      border-radius: 10px;
       opacity: 0;
-      max-width: 420px;
+      will-change: transform, opacity;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
-    /* Right column (image) */
-    .right {
-      width: 0.1%;
-      /* min-width: 260px; */
-      /* height: 70vh; */
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position: relative;
-    }
-    .image-wrap {
-      width: 100%;
-      max-width: 420px;
-      height: min(62vh, 620px);
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 18px 45px rgba(2,6,23,0.7);
-      background: #111;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-    .image-wrap img {
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-    /* content after the pinned block so normal scrolling resumes */
+    .right { width: 0.1%; display:flex; align-items:center; justify-content:center; position: relative; }
+    .image-wrap { width: 100%; max-width: 420px; height: min(62vh, 620px); border-radius: 12px; overflow: hidden; box-shadow: 0 18px 45px rgba(2,6,23,0.7); background: #111; display:flex; align-items:center; justify-content:center; }
+    .image-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+
     .after {
       padding: 64px 20px;
       background: transparent;
@@ -123,72 +166,165 @@
     }
     .after h2 { margin-top:0; }
     footer { text-align:center; padding:32px 20px 80px; color:var(--muted); }
-    /* responsive: stack columns on small screens (image below) */
+
+    /* responsive tweaks */
     @media (max-width:900px) {
-      .story-inner { flex-direction:column-reverse; gap:20px; padding:16px; }
-      .left, .right { width:100%; min-width:unset; height:auto; }
-      .left { height: auto; padding: 60px 0; }
-      .para, .section-label { position: relative; transform: none; top: auto; left: auto; margin: 12px auto; }
-      .image-wrap { height: 44vh; max-width: 90%; }
+      .center-box { padding: 18px; }
+      .center-box h2 { font-size: 1.1rem; }
+      .image-wrap { display:none; } /* optional, pinned area image hidden small screens */
+      .divider { margin: 0 10%; bottom: 8px; }
+      .section-counter { right: 12px; top: 12px; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>Frame-based animation + right pinned image</h1>
-      <p>Scroll to animate through frames. Each scroll step advances to the next frame. Scroll back rewinds smoothly.</p>
+      <h1>Frame-based animation sequence</h1>
+      <p>Scroll — each section fills the viewport and has a centered text animation.</p>
     </header>
   </div>
+
+  <!-- Fixed counter -->
+  <div class="section-counter" id="section-counter">1 / 4</div>
+
+  <!-- FOUR TEXT SECTIONS (no images) — using body scroll + scroll-snap -->
+  <main class="sections" id="sections">
+    <section class="section" data-index="1" aria-label="Text section 1">
+      <div class="center-box">
+        <h2>Section 1 heading</h2>
+        <p class="anim-para para-a">First paragraph — appears on entry, holds for 1s, then fades out.</p>
+        <p class="anim-para para-b">Second paragraph — fades in and remains in the same position.</p>
+      </div>
+      <div class="divider" aria-hidden="true"></div>
+    </section>
+
+    <section class="section" data-index="2" aria-label="Text section 2">
+      <div class="center-box">
+        <h2>Section 2 heading</h2>
+        <p class="anim-para para-a">First paragraph for section 2 — appears then fades.</p>
+        <p class="anim-para para-b">Second paragraph for section 2 — appears afterwards and stays.</p>
+      </div>
+      <div class="divider" aria-hidden="true"></div>
+    </section>
+
+    <section class="section" data-index="3" aria-label="Text section 3">
+      <div class="center-box">
+        <h2>Section 3 heading</h2>
+        <p class="anim-para para-a">First paragraph for section 3 — central and concise.</p>
+        <p class="anim-para para-b">Second paragraph for section 3 — appears in the same spot.</p>
+      </div>
+      <div class="divider" aria-hidden="true"></div>
+    </section>
+
+    <section class="section" data-index="4" aria-label="Text section 4">
+      <div class="center-box">
+        <h2>Section 4 heading</h2>
+        <p class="anim-para para-a">First paragraph for section 4 — final section's intro.</p>
+        <p class="anim-para para-b">Second paragraph for section 4 — final text that stays.</p>
+      </div>
+      <div class="divider" aria-hidden="true"></div>
+    </section>
+  </main>
+
   <div class="spacer"></div>
-  <!-- PINNED STORY: the whole block will be pinned while timeline runs -->
+
+  <!-- PINNED STORY (kept as you supplied) -->
   <section class="story-pin" aria-label="Story area with pinned image">
     <div class="story-inner wrap">
-      <!-- LEFT: frame container for animated frames -->
       <div class="left" aria-hidden="false">
         <div class="frame-container" id="frame-container">
-          <!-- First frame as fallback -->
           <img src="frames-desktop-webp/frame_0001.webp" class="frame" id="frame-1" alt="Frame 1" style="opacity: 1;" />
-          <!-- Additional frames will be dynamically loaded here -->
         </div>
       </div>
-      <!-- RIGHT: single image used for all sections -->
       <div class="right" aria-hidden="true">
         <div class="image-wrap" id="the-image">
-          <!-- Use any image you like here. This is a single image used across the entire timeline. -->
+          <!-- Kept the pinned image here as part of your original pinned block.
+               If you want this removed too, tell me and I'll remove it. -->
           <img src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=1400&q=80&auto=format&fit=crop&ixlib=rb-4.0.3&s=3c7b6d3a4f6b1c2f4a0e3ab3d4a1e2b7" alt="Pinned visual" />
         </div>
       </div>
     </div>
   </section>
-  <!-- After the pinned area: normal page content resumes -->
+
   <section class="after wrap">
     <h2>Normal page content</h2>
-    <p>This is content after the whole pinned sequence. When you finish the final frame and scroll further, the pinned block unpins and you'll reach this section normally.</p>
-    <p>Scroll up anytime to rewind the frames and see the image re-pin and frames animate backwards.</p>
+    <p>This is content after the whole pinned sequence. Scroll up to replay earlier animations.</p>
   </section>
   <footer>Demo — GSAP + ScrollTrigger</footer>
+
   <!-- GSAP + ScrollTrigger -->
   <script src="https://unpkg.com/gsap/dist/gsap.min.js"></script>
   <script src="https://unpkg.com/gsap/dist/ScrollTrigger.min.js"></script>
   <script>
-    // Frame-based animation script
-    // - registers ScrollTrigger
-    // - loads frames on demand for better performance
-    // - builds a timeline that sequentially animates through frames
-    // - pins the .story-pin container for the entire duration
-    // - scrub: true ensures smooth forward/backward sync with scrollbar
     window.addEventListener('load', () => {
       gsap.registerPlugin(ScrollTrigger);
-      
-      // Use fewer frames for better performance
-      const totalFrames = 428; // Start with 50 frames
+
+      const sections = Array.from(document.querySelectorAll('.section'));
+      const sectionCounter = document.getElementById('section-counter');
+      const total = sections.length;
+
+      // Ensure all paras initial hidden
+      sections.forEach((sec) => {
+        const a = sec.querySelector('.para-a');
+        const b = sec.querySelector('.para-b');
+        gsap.set([a, b], { autoAlpha: 0, y: 6 });
+      });
+
+      // Create timelines and triggers for each section
+      sections.forEach((sec, idx) => {
+        const a = sec.querySelector('.para-a');
+        const b = sec.querySelector('.para-b');
+
+        // Build a timeline: in -> hold 1s -> out -> show b
+        const tl = gsap.timeline({ paused: true });
+        tl.to(a, { duration: 0.6, autoAlpha: 1, y: 0, ease: "power2.out" })   // fade in a
+          .to({}, { duration: 1.0 })                                           // hold 1s
+          .to(a, { duration: 0.5, autoAlpha: 0, y: -6, ease: "power2.in" })    // fade out a
+          .to(b, { duration: 0.6, autoAlpha: 1, y: 0, ease: "power2.out" });   // fade in b and keep
+
+        // Restart timeline when section becomes active (entering viewport center)
+        ScrollTrigger.create({
+          trigger: sec,
+          start: "top center",
+          end: "bottom center",
+          onEnter: () => {
+            gsap.set([a, b], { autoAlpha: 0, y: 6 });
+            tl.restart();
+            sectionCounter.textContent = (idx + 1) + " / " + total;
+          },
+          onEnterBack: () => {
+            gsap.set([a, b], { autoAlpha: 0, y: 6 });
+            tl.restart();
+            sectionCounter.textContent = (idx + 1) + " / " + total;
+          },
+          onLeave: () => {
+            // hide when leaving forward
+            gsap.set([a, b], { autoAlpha: 0, y: 6 });
+          },
+          onLeaveBack: () => {
+            // hide when leaving backward
+            gsap.set([a, b], { autoAlpha: 0, y: 6 });
+          }
+        });
+
+        // small ScrollTrigger purely to update counter reliably (optional)
+        ScrollTrigger.create({
+          trigger: sec,
+          start: "top center",
+          end: "bottom center",
+          onEnter: () => sectionCounter.textContent = (idx + 1) + " / " + total,
+          onEnterBack: () => sectionCounter.textContent = (idx + 1) + " / " + total
+        });
+      });
+
+      /* -------------------------
+         Existing frame-based pinned story ScrollTrigger
+      ------------------------- */
+      const totalFrames = 428;
       const frameContainer = document.getElementById('frame-container');
-      
-      // Create additional frame elements (frame-1 already exists in HTML)
-      const frames = ['#frame-1']; // Start with the pre-loaded frame
+      const frames = ['#frame-1'];
       for (let i = 2; i <= totalFrames; i++) {
-        const frameNumber = i.toString().padStart(4, '0');
         const img = document.createElement('img');
         img.className = 'frame';
         img.id = `frame-${i}`;
@@ -199,82 +335,39 @@
         frameContainer.appendChild(img);
         frames.push(`#frame-${i}`);
       }
-      
-      // Ensure first frame is visible and all others are hidden
       const firstFrame = document.getElementById('frame-1');
       gsap.set(firstFrame, { autoAlpha: 1, x: 0 });
-      
-      // Pre-set all other frames as hidden (no x offset for smooth transitions)
       for (let i = 2; i <= totalFrames; i++) {
         gsap.set(`#frame-${i}`, { autoAlpha: 0, x: 0 });
       }
-      
-      // Test: Make sure first frame is actually visible
-      console.log('First frame opacity:', firstFrame.style.opacity);
-      console.log('First frame display:', firstFrame.style.display);
-      console.log('First frame visibility:', firstFrame.style.visibility);
-      
-      // Debug: log to console
-      console.log('Frame container:', frameContainer);
-      console.log('First frame:', firstFrame);
-      console.log('First frame src:', firstFrame.src);
-      
-      // Calculate scroll distance for smooth video-like playback
-      const endPercent = totalFrames * 5; // 20% per frame for more scroll distance
-      
-      // Store current frame index
+      const endPercent = totalFrames * 5;
       let currentFrameIndex = 0;
-      
-      // Create ScrollTrigger with onUpdate callback
       ScrollTrigger.create({
         trigger: ".story-pin",
         start: "top top",
         end: "+=" + endPercent + "%",
         scrub: true,
         pin: true,
-        markers: true, // Enable markers to see scroll trigger area
+        markers: false,
         onUpdate: (self) => {
-          console.log('ScrollTrigger progress:', self.progress);
-          
-          // Calculate which frame should be shown based on progress
           const targetFrameIndex = Math.floor(self.progress * (totalFrames - 1));
-          
-          // Only update if frame has changed
           if (targetFrameIndex !== currentFrameIndex && targetFrameIndex >= 0 && targetFrameIndex < totalFrames) {
-            // Hide current frame
             if (frames[currentFrameIndex]) {
               gsap.set(frames[currentFrameIndex], { autoAlpha: 0 });
             }
-            
-            // Show new frame
-            const newFrameSel = frames[targetFrameIndex];
             const frameElement = document.getElementById(`frame-${targetFrameIndex + 1}`);
-            
-            // Load frame image if not already loaded
             if (frameElement && !frameElement.src) {
               const frameNumber = (targetFrameIndex + 1).toString().padStart(4, '0');
               frameElement.src = `frames-desktop-webp/frame_${frameNumber}.webp`;
             }
-            
-            // Show the new frame
-            gsap.set(newFrameSel, { autoAlpha: 1 });
-            console.log(`Showing frame ${targetFrameIndex + 1}: ${newFrameSel}`);
-            
+            gsap.set(frames[targetFrameIndex], { autoAlpha: 1 });
             currentFrameIndex = targetFrameIndex;
           }
-        },
-        onStart: () => {
-          console.log('ScrollTrigger started');
-        },
-        onComplete: () => {
-          console.log('ScrollTrigger completed');
         }
       });
-      
-      // refresh to ensure positions are correct
+
       ScrollTrigger.refresh();
     });
   </script>
 </body>
 </html>
-

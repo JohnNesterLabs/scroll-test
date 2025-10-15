@@ -1,6 +1,8 @@
 /* index.css - Base styles for the React application */
 
+html,
 body {
+    height: 100%;
     margin: 0;
     font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     -webkit-font-smoothing: antialiased;
@@ -16,4 +18,8 @@ code {
 
 * {
     box-sizing: border-box;
+}
+
+#root {
+    height: 100%;
 }
