@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SectionCounter from './SectionCounter';
@@ -12,6 +12,9 @@ gsap.registerPlugin(ScrollTrigger);
 const MultiSectionScroll = () => {
     const sectionsRef = useRef(null);
     const sectionCounterRef = useRef(null);
+    const currentSectionRef = useRef(0);
+    const isScrollingRef = useRef(false);
+    const scrollTimeoutRef = useRef(null);
 
     const sectionsData = [
         {
@@ -39,6 +42,60 @@ const MultiSectionScroll = () => {
             paraB: "Second paragraph for section 4 — final text that stays."
         }
     ];
+
+    // Scroll throttling function to limit section skipping
+    const handleScroll = useCallback((event) => {
+        if (isScrollingRef.current) return;
+
+        const sections = Array.from(document.querySelectorAll('.section'));
+        const totalSections = sections.length;
+
+        // Clear existing timeout
+        if (scrollTimeoutRef.current) {
+            clearTimeout(scrollTimeoutRef.current);
+        }
+
+        // Calculate which section should be visible based on scroll position
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const targetSection = Math.floor(scrollY / windowHeight);
+
+        // Only apply throttling if we're within the text sections area
+        // After section 4, allow normal scrolling
+        if (targetSection >= totalSections) {
+            // We're past the text sections, allow normal scrolling
+            currentSectionRef.current = totalSections - 1; // Keep track of last section
+            return;
+        }
+
+        // Limit the target section to prevent skipping more than one section
+        const currentSection = currentSectionRef.current;
+        const maxJump = 1; // Maximum sections to skip
+
+        let newSection = targetSection;
+        if (Math.abs(targetSection - currentSection) > maxJump) {
+            newSection = currentSection + (targetSection > currentSection ? maxJump : -maxJump);
+        }
+
+        // Clamp to valid range
+        newSection = Math.max(0, Math.min(totalSections - 1, newSection));
+
+        // If we need to adjust the scroll position
+        if (newSection !== targetSection) {
+            isScrollingRef.current = true;
+            window.scrollTo({
+                top: newSection * windowHeight,
+                behavior: 'smooth'
+            });
+
+            // Reset scrolling flag after animation
+            scrollTimeoutRef.current = setTimeout(() => {
+                isScrollingRef.current = false;
+            }, 500);
+        }
+
+        currentSectionRef.current = newSection;
+    }, []);
 
     useEffect(() => {
         const sections = Array.from(document.querySelectorAll('.section'));
@@ -113,11 +170,18 @@ const MultiSectionScroll = () => {
 
         ScrollTrigger.refresh();
 
+        // Add scroll event listener for throttling
+        window.addEventListener('scroll', handleScroll, { passive: true });
+
         // Cleanup function
         return () => {
             ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+            window.removeEventListener('scroll', handleScroll);
+            if (scrollTimeoutRef.current) {
+                clearTimeout(scrollTimeoutRef.current);
+            }
         };
-    }, []);
+    }, [handleScroll]);
 
     return (
         <div className="multi-section-scroll">

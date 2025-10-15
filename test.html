@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Multi-section scroll — centered text, fade transitions</title>
   <style>
-    :root{
+    :root {
       --bg: #000;
       --text: #EEF2FF;
       --muted: #98A0B3;
@@ -15,18 +16,46 @@
     }
 
     /* Page basics */
-    html,body{ height:100%; margin:0; background:var(--bg); color:var(--text); font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
-    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 36px 20px; box-sizing: border-box; }
-    header { text-align:center; margin-bottom:18px; }
-    header h1 { margin:0 0 4px; font-size:1.25rem; }
-    header p { margin:0; color:var(--muted); font-size:0.95rem; }
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .wrap {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 36px 20px;
+      box-sizing: border-box;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    header h1 {
+      margin: 0 0 4px;
+      font-size: 1.25rem;
+    }
+
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
 
     /* Fixed section counter in top-right */
     .section-counter {
       position: fixed;
       right: 18px;
       top: 18px;
-      background: rgba(255,255,255,0.03);
+      background: rgba(255, 255, 255, 0.03);
       padding: 8px 12px;
       border-radius: 10px;
       color: var(--muted);
@@ -40,15 +69,14 @@
     /********************************
       SECTION SNAP AREA (text-only)
     *********************************/
-    /* Using body scroll but a wrapper to apply snap behavior */
+    /* Custom scroll behavior without snap */
     .sections {
-      scroll-snap-type: y mandatory;
-      -webkit-scroll-snap-type: y mandatory;
+      /* Removed scroll-snap properties for custom control */
     }
+
     .section {
       height: 100vh;
       min-height: 100vh;
-      scroll-snap-align: start;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -65,11 +93,13 @@
       padding: 28px 22px;
       box-sizing: border-box;
     }
+
     .center-box h2 {
       margin: 0 0 12px;
       font-size: 1.3rem;
       line-height: 1.1;
     }
+
     .center-box p {
       margin: 0;
       color: var(--muted);
@@ -95,11 +125,13 @@
       border-radius: 999px;
       background: linear-gradient(90deg, var(--accent-a), var(--accent-b));
       opacity: 0.95;
-      box-shadow: 0 6px 22px rgba(124,92,255,0.12);
+      box-shadow: 0 6px 22px rgba(124, 92, 255, 0.12);
     }
 
     /* spacer before pinned area (keeps original spacing) */
-    .spacer { height: 8vh; }
+    .spacer {
+      height: 8vh;
+    }
 
     /* ==== Pinned story area (your existing frame block) ==== */
     .story-pin {
@@ -109,9 +141,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border-top: 1px solid rgba(255,255,255,0.03);
-      border-bottom: 1px solid rgba(255,255,255,0.03);
+      border-top: 1px solid rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     }
+
     .story-inner {
       width: 100%;
       max-width: var(--maxw);
@@ -121,12 +154,14 @@
       padding: 24px;
       box-sizing: border-box;
     }
+
     .left {
       width: 100%;
       height: 70vh;
       position: relative;
       display: block;
     }
+
     .frame-container {
       position: absolute;
       left: 0;
@@ -134,7 +169,7 @@
       transform: translateY(-50%);
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+      box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
       background: #111;
       display: flex;
       align-items: center;
@@ -143,6 +178,7 @@
       max-width: 520px;
       height: 70vh;
     }
+
     .frame {
       width: 100%;
       height: 100%;
@@ -154,9 +190,34 @@
       top: 0;
       left: 0;
     }
-    .right { width: 0.1%; display:flex; align-items:center; justify-content:center; position: relative; }
-    .image-wrap { width: 100%; max-width: 420px; height: min(62vh, 620px); border-radius: 12px; overflow: hidden; box-shadow: 0 18px 45px rgba(2,6,23,0.7); background: #111; display:flex; align-items:center; justify-content:center; }
-    .image-wrap img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .right {
+      width: 0.1%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .image-wrap {
+      width: 100%;
+      max-width: 420px;
+      height: min(62vh, 620px);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 18px 45px rgba(2, 6, 23, 0.7);
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
     .after {
       padding: 64px 20px;
@@ -164,19 +225,45 @@
       color: var(--text);
       min-height: 60vh;
     }
-    .after h2 { margin-top:0; }
-    footer { text-align:center; padding:32px 20px 80px; color:var(--muted); }
+
+    .after h2 {
+      margin-top: 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 32px 20px 80px;
+      color: var(--muted);
+    }
 
     /* responsive tweaks */
     @media (max-width:900px) {
-      .center-box { padding: 18px; }
-      .center-box h2 { font-size: 1.1rem; }
-      .image-wrap { display:none; } /* optional, pinned area image hidden small screens */
-      .divider { margin: 0 10%; bottom: 8px; }
-      .section-counter { right: 12px; top: 12px; }
+      .center-box {
+        padding: 18px;
+      }
+
+      .center-box h2 {
+        font-size: 1.1rem;
+      }
+
+      .image-wrap {
+        display: none;
+      }
+
+      /* optional, pinned area image hidden small screens */
+      .divider {
+        margin: 0 10%;
+        bottom: 8px;
+      }
+
+      .section-counter {
+        right: 12px;
+        top: 12px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <header>
@@ -241,7 +328,9 @@
         <div class="image-wrap" id="the-image">
           <!-- Kept the pinned image here as part of your original pinned block.
                If you want this removed too, tell me and I'll remove it. -->
-          <img src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=1400&q=80&auto=format&fit=crop&ixlib=rb-4.0.3&s=3c7b6d3a4f6b1c2f4a0e3ab3d4a1e2b7" alt="Pinned visual" />
+          <img
+            src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=1400&q=80&auto=format&fit=crop&ixlib=rb-4.0.3&s=3c7b6d3a4f6b1c2f4a0e3ab3d4a1e2b7"
+            alt="Pinned visual" />
         </div>
       </div>
     </div>
@@ -263,6 +352,64 @@
       const sections = Array.from(document.querySelectorAll('.section'));
       const sectionCounter = document.getElementById('section-counter');
       const total = sections.length;
+
+      // Scroll throttling variables
+      let currentSection = 0;
+      let isScrolling = false;
+      let scrollTimeout = null;
+
+      // Scroll throttling function to limit section skipping
+      const handleScroll = (event) => {
+        if (isScrolling) return;
+
+        // Clear existing timeout
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
+
+        // Calculate which section should be visible based on scroll position
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const targetSection = Math.floor(scrollY / windowHeight);
+
+        // Only apply throttling if we're within the text sections area
+        // After section 4, allow normal scrolling
+        if (targetSection >= total) {
+          // We're past the text sections, allow normal scrolling
+          currentSection = total - 1; // Keep track of last section
+          return;
+        }
+
+        // Limit the target section to prevent skipping more than one section
+        const maxJump = 1; // Maximum sections to skip
+
+        let newSection = targetSection;
+        if (Math.abs(targetSection - currentSection) > maxJump) {
+          newSection = currentSection + (targetSection > currentSection ? maxJump : -maxJump);
+        }
+
+        // Clamp to valid range
+        newSection = Math.max(0, Math.min(total - 1, newSection));
+
+        // If we need to adjust the scroll position
+        if (newSection !== targetSection) {
+          isScrolling = true;
+          window.scrollTo({
+            top: newSection * windowHeight,
+            behavior: 'smooth'
+          });
+
+          // Reset scrolling flag after animation
+          scrollTimeout = setTimeout(() => {
+            isScrolling = false;
+          }, 500);
+        }
+
+        currentSection = newSection;
+      };
+
+      // Add scroll event listener for throttling
+      window.addEventListener('scroll', handleScroll, { passive: true });
 
       // Ensure all paras initial hidden
       sections.forEach((sec) => {
@@ -367,7 +514,16 @@
       });
 
       ScrollTrigger.refresh();
+
+      // Cleanup function for scroll event listener
+      window.addEventListener('beforeunload', () => {
+        window.removeEventListener('scroll', handleScroll);
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
+      });
     });
   </script>
 </body>
+
 </html>

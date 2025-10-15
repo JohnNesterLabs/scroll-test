@@ -60,16 +60,14 @@ header p {
 /********************************
   SECTION SNAP AREA (text-only)
 *********************************/
-/* Using body scroll but a wrapper to apply snap behavior */
+/* Custom scroll behavior without snap */
 .sections {
-    scroll-snap-type: y mandatory;
-    -webkit-scroll-snap-type: y mandatory;
+    /* Removed scroll-snap properties for custom control */
 }
 
 .section {
     height: 100vh;
     min-height: 100vh;
-    scroll-snap-align: start;
     display: flex;
     align-items: center;
     justify-content: center;
