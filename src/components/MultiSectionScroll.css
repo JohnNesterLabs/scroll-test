@@ -78,25 +78,24 @@ header p {
     position: relative;
 }
 
-/* Content centered exactly center of viewport */
-.center-box {
-    width: 100%;
-    max-width: 960px;
-    text-align: center;
-    padding: 28px 22px;
-    box-sizing: border-box;
-}
 
 .center-box h2 {
     margin: 0 0 12px;
-    font-size: 1.3rem;
+    font-size: 2.2rem;
+    /* Increased from 1.3rem */
     line-height: 1.1;
+    position: absolute;
+    top: 80px;
+    /* Same position as paragraphs */
+    left: 0;
+    right: 0;
 }
 
 .center-box p {
     margin: 0;
     color: var(--muted);
-    font-size: 1.0rem;
+    font-size: 1.4rem;
+    /* Increased from 1.0rem */
     line-height: 1.5;
 }
 
@@ -105,6 +104,30 @@ header p {
     opacity: 0;
     transform: translateY(6px);
     will-change: opacity, transform;
+    position: absolute;
+    top: 130px;
+    /* Position below the heading */
+    left: 0;
+    right: 0;
+    margin: 0;
+}
+
+/* Container for animated paragraphs */
+.center-box {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    text-align: center;
+    padding: 28px 22px;
+    box-sizing: border-box;
+    min-height: 200px;
+    /* Increased height to accommodate heading + paragraph + spacing */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Align content to top instead of center */
+    padding-top: 20vh;
+    /* Move content higher up */
 }
 
 /* Vibrant divider at bottom edge to indicate section end */
@@ -230,7 +253,13 @@ footer {
     }
 
     .center-box h2 {
-        font-size: 1.1rem;
+        font-size: 1.8rem;
+        /* Increased mobile heading size */
+    }
+
+    .center-box p {
+        font-size: 1.2rem;
+        /* Increased mobile paragraph size */
     }
 
     .image-wrap {

@@ -57,10 +57,10 @@ const MultiSectionScroll = () => {
             const paraA = sec.querySelector('.para-a');
             const paraB = sec.querySelector('.para-b');
 
-            // Build a timeline: in -> hold 1s -> out -> show b
+            // Build a timeline: in -> hold 2s -> out -> show b
             const tl = gsap.timeline({ paused: true });
             tl.to(paraA, { duration: 0.6, autoAlpha: 1, y: 0, ease: "power2.out" })   // fade in a
-                .to({}, { duration: 1.0 })                                           // hold 1s
+                .to({}, { duration: 2.0 })                                           // hold 2s
                 .to(paraA, { duration: 0.5, autoAlpha: 0, y: -6, ease: "power2.in" })    // fade out a
                 .to(paraB, { duration: 0.6, autoAlpha: 1, y: 0, ease: "power2.out" });   // fade in b and keep
 
