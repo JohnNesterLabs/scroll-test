@@ -19,7 +19,7 @@ const MultiSectionScroll = () => {
     const sectionsData = [
         {
             id: 1,
-            heading: "Section 1 heading",
+            heading: "",
             paraA: "First paragraph — appears on entry, holds for 1s, then fades out.",
             paraB: "Second paragraph — fades in and remains in the same position."
         },
