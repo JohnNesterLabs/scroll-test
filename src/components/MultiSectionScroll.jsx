@@ -106,7 +106,8 @@ const MultiSectionScroll = () => {
         sections.forEach((sec) => {
             const paraA = sec.querySelector('.para-a');
             const paraB = sec.querySelector('.para-b');
-            gsap.set([paraA, paraB], { autoAlpha: 0, y: 6 });
+            gsap.set(paraA, { autoAlpha: 0, y: 6 });
+            gsap.set(paraB, { autoAlpha: 0, y: 6, visibility: "hidden" });
         });
 
         // Create timelines and triggers for each section
@@ -119,7 +120,7 @@ const MultiSectionScroll = () => {
             tl.to(paraA, { duration: 0.6, autoAlpha: 1, y: 0, ease: "power2.out" })   // fade in a
                 .to({}, { duration: 2.0 })                                           // hold 2s
                 .to(paraA, { duration: 0.5, autoAlpha: 0, y: -6, ease: "power2.in" })    // fade out a
-                .to(paraB, { duration: 0.6, autoAlpha: 1, y: 0, ease: "power2.out" });   // fade in b and keep
+                .to(paraB, { duration: 0.6, autoAlpha: 1, y: 0, visibility: "visible", ease: "power2.out" });   // fade in b and keep
 
             // Restart timeline when section becomes active (entering viewport center)
             ScrollTrigger.create({
@@ -127,14 +128,16 @@ const MultiSectionScroll = () => {
                 start: "top center",
                 end: "bottom center",
                 onEnter: () => {
-                    gsap.set([paraA, paraB], { autoAlpha: 0, y: 6 });
+                    gsap.set(paraA, { autoAlpha: 0, y: 6 });
+                    gsap.set(paraB, { autoAlpha: 0, y: 6, visibility: "hidden" });
                     tl.restart();
                     if (sectionCounter) {
                         sectionCounter.textContent = (idx + 1) + " / " + total;
                     }
                 },
                 onEnterBack: () => {
-                    gsap.set([paraA, paraB], { autoAlpha: 0, y: 6 });
+                    gsap.set(paraA, { autoAlpha: 0, y: 6 });
+                    gsap.set(paraB, { autoAlpha: 0, y: 6, visibility: "hidden" });
                     tl.restart();
                     if (sectionCounter) {
                         sectionCounter.textContent = (idx + 1) + " / " + total;
