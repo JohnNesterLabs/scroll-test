@@ -92,7 +92,7 @@ header p {
 .center-box p {
     margin: 0;
     color: var(--muted);
-    font-size: 1.4rem;
+    font-size: 2.5rem;
     /* Increased from 1.0rem */
     line-height: 1.5;
 }

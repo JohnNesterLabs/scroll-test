@@ -20,8 +20,8 @@ const MultiSectionScroll = () => {
         {
             id: 1,
             heading: "",
-            paraA: "First paragraph — appears on entry, holds for 1s, then fades out.",
-            paraB: "Second paragraph — fades in and remains in the same position."
+            paraA: "Vast and intricate, <br>product never stop evolving ",
+            paraB: "Enterprise customers have an .<br>endless spectrum of realities"
         },
         {
             id: 2,
