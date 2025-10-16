@@ -19,9 +19,9 @@ const MultiSectionScroll = () => {
     const sectionsData = [
         {
             id: 1,
-            heading: "Section 1 heading",
-            paraA: "First paragraph — appears on entry, holds for 1s, then fades out.",
-            paraB: "Second paragraph — fades in and remains in the same position."
+            heading: "",
+            paraA: "Vast and intricate <br/>product never stop evolving ",
+            paraB: "Enterprise customers have an <br/>endless spectrum of realities"
         },
         {
             id: 2,
@@ -188,8 +188,6 @@ const MultiSectionScroll = () => {
             {/* Header */}
             <div className="wrap">
                 <header>
-                    <h1>Frame-based animation sequence</h1>
-                    <p>Scroll — each section fills the viewport and has a centered text animation.</p>
                 </header>
             </div>
 
