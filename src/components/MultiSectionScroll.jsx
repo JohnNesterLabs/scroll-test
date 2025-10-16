@@ -185,13 +185,6 @@ const MultiSectionScroll = () => {
 
     return (
         <div className="multi-section-scroll">
-            {/* Header */}
-            <div className="wrap">
-                <header>
-                    <h1>Frame-based animation sequence</h1>
-                    <p>Scroll — each section fills the viewport and has a centered text animation.</p>
-                </header>
-            </div>
 
             {/* Fixed counter */}
             <SectionCounter ref={sectionCounterRef} />
