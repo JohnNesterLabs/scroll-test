@@ -134,8 +134,14 @@ const MultiSectionScroll = () => {
                     }
                 },
                 onEnterBack: () => {
+                    tl.kill();
                     gsap.set([paraA, paraB], { autoAlpha: 0, y: 6 });
-                    tl.restart();
+                    const newTl = gsap.timeline({ paused: true });
+                    newTl.to(paraA, { duration: 0.6, autoAlpha: 1, y: 0, ease: "power2.out" })
+                        .to({}, { duration: 2.0 })
+                        .to(paraA, { duration: 0.5, autoAlpha: 0, y: -6, ease: "power2.in" })
+                        .to(paraB, { duration: 0.6, autoAlpha: 1, y: 0, ease: "power2.out" });
+                    newTl.restart();
                     if (sectionCounter) {
                         sectionCounter.textContent = (idx + 1) + " / " + total;
                     }
