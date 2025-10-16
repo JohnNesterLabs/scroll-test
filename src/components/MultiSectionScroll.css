@@ -69,7 +69,7 @@ header p {
     height: 100vh;
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     box-sizing: border-box;
     padding: 28px;
@@ -124,8 +124,8 @@ header p {
     flex-direction: column;
     justify-content: flex-start;
     /* Align content to top instead of center */
-    padding-top: 20vh;
-    /* Move content higher up */
+    padding-top: 80px;
+    /* Move content to top with proper spacing */
 }
 
 /* Vibrant divider at bottom edge to indicate section end */
