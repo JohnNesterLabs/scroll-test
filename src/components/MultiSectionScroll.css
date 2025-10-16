@@ -119,7 +119,7 @@ header p {
     padding: 28px 22px;
     box-sizing: border-box;
     min-height: 200px;
-    /* Increased height to accommodate heading + paragraph + spacing */
+    /* Increased height to accommodate heading + paragraph + spacing 67846*/
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
